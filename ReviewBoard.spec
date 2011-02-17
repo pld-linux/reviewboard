@@ -9,6 +9,7 @@ Source0:	http://downloads.review-board.org/releases/ReviewBoard/1.5/%{name}-%{ve
 # Source0-md5:	735148b8c865d77b461a0cf80b72a1e7
 BuildRequires:	python-devel
 BuildRequires:	python-setuptools
+BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sed >= 4.0
 Requires:	django-evolution >= 0.6.2
 Requires:	httpd
@@ -50,10 +51,13 @@ rm -rf $RPM_BUILD_ROOT
 	--skip-build \
 	--root $RPM_BUILD_ROOT
 
+%py_postclean
+
 # These scripts have a shebang and are meaningful to run; make them executable:
-chmod +x $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/manage.py
-chmod +x $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/cmdline/rbssh.py
-chmod +x $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/cmdline/rbsite.py
+# reinstall as py_postclean removed them
+install -p reviewboard/manage.py $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/manage.py
+install -p reviewboard/cmdline/rbssh.py $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/cmdline/rbssh.py
+install -p reviewboard/cmdline/rbsite.py $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/cmdline/rbsite.py
 
 # Remove test data from the installed packages
 rm -rf $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/diffviewer/testdata \
@@ -71,7 +75,27 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS COPYING INSTALL NEWS README
 %attr(755,root,root) %{_bindir}/rb-site
 %attr(755,root,root) %{_bindir}/rbssh
-#%{py_sitescriptdir}/reviewboard
+%dir %{py_sitescriptdir}/reviewboard
+%{py_sitescriptdir}/reviewboard/nose.cfg
+%{py_sitescriptdir}/reviewboard/accounts
+%{py_sitescriptdir}/reviewboard/admin
+%{py_sitescriptdir}/reviewboard/changedescs
+%{py_sitescriptdir}/reviewboard/diffviewer
+%{py_sitescriptdir}/reviewboard/htdocs
+%{py_sitescriptdir}/reviewboard/iphone
+%{py_sitescriptdir}/reviewboard/notifications
+%{py_sitescriptdir}/reviewboard/reports
+%{py_sitescriptdir}/reviewboard/reviews
+%{py_sitescriptdir}/reviewboard/scmtools
+%{py_sitescriptdir}/reviewboard/templates
+%{py_sitescriptdir}/reviewboard/webapi
+%{py_sitescriptdir}/reviewboard/*.py[co]
+%attr(755,root,root) %{py_sitescriptdir}/reviewboard/manage.py
+%dir %{py_sitescriptdir}/reviewboard/cmdline
+%{py_sitescriptdir}/reviewboard/cmdline/*.py[co]
+%{py_sitescriptdir}/reviewboard/cmdline/conf
+%attr(755,root,root) %{py_sitescriptdir}/reviewboard/cmdline/rbssh.py
+%attr(755,root,root) %{py_sitescriptdir}/reviewboard/cmdline/rbsite.py
 %{py_sitescriptdir}/webtests/*.py*
 %if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/ReviewBoard-%{version}-*.egg-info
