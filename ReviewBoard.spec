@@ -1,10 +1,12 @@
+# TODO
+# - webservers integration
 Summary:	Web-based code review tool
 Name:		ReviewBoard
 Version:	1.5.3
-Release:	0.1
+Release:	1
 License:	MIT
 Group:		Applications/Networking
-URL:		http://www.review-board.org
+URL:		http://www.review-board.org/
 Source0:	http://downloads.review-board.org/releases/ReviewBoard/1.5/%{name}-%{version}.tar.gz
 # Source0-md5:	735148b8c865d77b461a0cf80b72a1e7
 BuildRequires:	python-devel
@@ -12,7 +14,6 @@ BuildRequires:	python-setuptools
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sed >= 4.0
 Requires:	django-evolution >= 0.6.2
-Requires:	httpd
 Requires:	patchutils
 Requires:	python-PIL
 Requires:	python-dateutil
