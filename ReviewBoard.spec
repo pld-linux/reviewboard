@@ -14,7 +14,6 @@ BuildRequires:	sed >= 4.0
 Requires:	django-evolution >= 0.6.2
 Requires:	httpd
 Requires:	patchutils
-Requires:	pysvn
 Requires:	python-PIL
 Requires:	python-dateutil
 Requires:	python-django >= 1.1.3
@@ -24,9 +23,10 @@ Requires:	python-memcached
 Requires:	python-nose
 Requires:	python-paramiko
 Requires:	python-pygments >= 1.1.1
-Requires:	python-recaptcha-client
+Requires:	python-pysvn
+Requires:	python-pytz
+Requires:	python-recaptcha
 Requires:	python-sqlite
-Requires:	pytz
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
