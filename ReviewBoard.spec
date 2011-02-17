@@ -40,6 +40,7 @@ take much of the stress and time out of the code review process.
 %setup -q
 %{__sed} -i -e 's/^from ez_setup/#from ez_setup/' setup.py
 %{__sed} -i -e 's/^use_setuptools()/#use_setuptools()/' setup.py
+%{__sed} -i -e '1s,^#!.*python,#!%{__python},' reviewboard/manage.py
 
 %build
 %{__python} setup.py build
