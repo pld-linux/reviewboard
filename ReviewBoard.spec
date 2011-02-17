@@ -53,11 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %py_postclean
 
-# These scripts have a shebang and are meaningful to run; make them executable:
-# reinstall as py_postclean removed them
+# scripts that have a shebang and are meaningful to run; make executable:
+# need to reinstall as py_postclean has removed .py
 install -p reviewboard/manage.py $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/manage.py
-install -p reviewboard/cmdline/rbssh.py $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/cmdline/rbssh.py
-install -p reviewboard/cmdline/rbsite.py $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/cmdline/rbsite.py
 
 # Remove test data from the installed packages
 rm -rf $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/diffviewer/testdata \
@@ -91,11 +89,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitescriptdir}/reviewboard/webapi
 %{py_sitescriptdir}/reviewboard/*.py[co]
 %attr(755,root,root) %{py_sitescriptdir}/reviewboard/manage.py
-%dir %{py_sitescriptdir}/reviewboard/cmdline
-%{py_sitescriptdir}/reviewboard/cmdline/*.py[co]
-%{py_sitescriptdir}/reviewboard/cmdline/conf
-%attr(755,root,root) %{py_sitescriptdir}/reviewboard/cmdline/rbssh.py
-%attr(755,root,root) %{py_sitescriptdir}/reviewboard/cmdline/rbsite.py
+%{py_sitescriptdir}/reviewboard/cmdline
 %{py_sitescriptdir}/webtests/*.py*
 %if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/ReviewBoard-%{version}-*.egg-info
