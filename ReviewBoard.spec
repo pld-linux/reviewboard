@@ -3,7 +3,7 @@
 Summary:	Web-based code review tool
 Name:		ReviewBoard
 Version:	1.5.3
-Release:	1
+Release:	2
 License:	MIT
 Group:		Applications/Networking
 URL:		http://www.review-board.org/
@@ -13,11 +13,11 @@ BuildRequires:	python-devel
 BuildRequires:	python-setuptools
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sed >= 4.0
-Requires:	django-evolution >= 0.6.2
 Requires:	patchutils
 Requires:	python-PIL
 Requires:	python-dateutil
 Requires:	python-django >= 1.1.3
+Requires:	python-django-evolution >= 0.6.2
 Requires:	python-djblets >= 0.6.7
 Requires:	python-flup
 Requires:	python-memcached
@@ -61,7 +61,8 @@ install -p reviewboard/manage.py $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/
 
 # Remove test data from the installed packages
 rm -rf $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/diffviewer/testdata \
-       $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/scmtools/testdata
+       $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/scmtools/testdata \
+       $RPM_BUILD_ROOT%{py_sitescriptdir}/webtests
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -92,7 +93,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitescriptdir}/reviewboard/*.py[co]
 %attr(755,root,root) %{py_sitescriptdir}/reviewboard/manage.py
 %{py_sitescriptdir}/reviewboard/cmdline
-%{py_sitescriptdir}/webtests/*.py*
 %if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/ReviewBoard-%{version}-*.egg-info
 %endif
