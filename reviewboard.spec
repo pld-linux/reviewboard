@@ -12,23 +12,14 @@ URL:		http://www.review-board.org/
 Source0:	http://downloads.reviewboard.org/releases/ReviewBoard/1.7/ReviewBoard-%{version}.tar.gz
 # Source0-md5:	f5ead87918a472945384263516dbb06e
 Patch0:		default-cache-file-path.patch
-BuildRequires:	python-dateutil
-BuildRequires:	python-devel
+BuildRequires:	python-django >= 1.4.3
 BuildRequires:	python-django-evolution >= 0.6.7
-BuildRequires:	python-django-pipeline >= 1.2.22
 BuildRequires:	python-djblets >= 0.7.8
-BuildRequires:	python-docutils
-BuildRequires:	python-markdown >= 2.2.1
-BuildRequires:	python-mimeparse
-BuildRequires:	python-nose
-BuildRequires:	python-paramiko >= 1.7.6
-BuildRequires:	python-pygments >= 1.5
-BuildRequires:	python-pysvn
-BuildRequires:	python-pytz
-BuildRequires:	python-recaptcha
+BuildRequires:	python-jsmin
+BuildRequires:	python-modules
 BuildRequires:	python-setuptools
-BuildRequires:	python-slimit
-BuildRequires:	python-sphinx
+BuildRequires:	python-sqlite
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sed >= 4.0
 Requires:	patch
