@@ -3,13 +3,13 @@
 # - system js packages, jquery, jquery-ui, etc
 # - do we need to package .less and not minified .js? nose.cfg?
 Summary:	Web-based code review tool
-Name:		ReviewBoard
+Name:		reviewboard
 Version:	1.7.2
 Release:	1
 License:	MIT
 Group:		Applications/Networking
 URL:		http://www.review-board.org/
-Source0:	http://downloads.reviewboard.org/releases/ReviewBoard/1.7/%{name}-%{version}.tar.gz
+Source0:	http://downloads.reviewboard.org/releases/ReviewBoard/1.7/ReviewBoard-%{version}.tar.gz
 # Source0-md5:	f5ead87918a472945384263516dbb06e
 Patch0:		default-cache-file-path.patch
 BuildRequires:	python-dateutil
@@ -52,6 +52,7 @@ Requires:	python-pysvn
 Requires:	python-pytz
 Requires:	python-recaptcha
 Requires:	python-slimit
+Obsoletes:	ReviewBoard < 1.7.0
 # Pull in the client libraries for all of the supported databases
 Requires:	MySQL-python
 Requires:	python-psycopg2
@@ -70,7 +71,7 @@ small projects to large companies and offers a variety of tools to
 take much of the stress and time out of the code review process.
 
 %prep
-%setup -q
+%setup -q -n ReviewBoard-%{version}
 %patch0 -p1
 
 %{__sed} -i -e '1s,^#!.*python,#!%{__python},' reviewboard/manage.py
