@@ -84,6 +84,7 @@ take much of the stress and time out of the code review process.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/var/cache/reviewboard/cache
 %{__python} setup.py install \
 	--skip-build \
 	--optimize=2 \
@@ -112,6 +113,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS COPYING INSTALL NEWS README
 %attr(755,root,root) %{_bindir}/rb-site
 %attr(755,root,root) %{_bindir}/rbssh
+%dir %attr(770,root,http) /var/cache/reviewboard
+%dir %attr(770,root,http) /var/cache/reviewboard/cache
 %dir %{py_sitescriptdir}/reviewboard
 %{py_sitescriptdir}/reviewboard/nose.cfg
 %{py_sitescriptdir}/reviewboard/*.py[co]
