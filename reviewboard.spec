@@ -15,14 +15,14 @@ Patch0:		default-cache-file-path.patch
 BuildRequires:	python-dateutil
 BuildRequires:	python-devel
 BuildRequires:	python-django-evolution >= 0.6.7
-BuildRequires:	python-django-pipeline >= 1.2.16
+BuildRequires:	python-django-pipeline >= 1.2.22
 BuildRequires:	python-djblets >= 0.7.8
 BuildRequires:	python-docutils
 BuildRequires:	python-markdown >= 2.2.1
 BuildRequires:	python-mimeparse
 BuildRequires:	python-nose
 BuildRequires:	python-paramiko >= 1.7.6
-BuildRequires:	python-pygments >= 1.4
+BuildRequires:	python-pygments >= 1.5
 BuildRequires:	python-pysvn
 BuildRequires:	python-pytz
 BuildRequires:	python-recaptcha
@@ -31,14 +31,13 @@ BuildRequires:	python-slimit
 BuildRequires:	python-sphinx
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sed >= 4.0
-Requires:	apache-mod_wsgi
 Requires:	patch
 Requires:	patchutils
 Requires:	python-PIL
 Requires:	python-dateutil
-Requires:	python-django >= 1.4.2
+Requires:	python-django >= 1.4.3
 Requires:	python-django-evolution >= 0.6.7
-Requires:	python-django-pipeline >= 1.2.16
+Requires:	python-django-pipeline >= 1.2.22
 Requires:	python-djblets >= 0.7.1
 Requires:	python-docutils
 Requires:	python-flup
@@ -47,20 +46,23 @@ Requires:	python-memcached
 Requires:	python-mimeparse
 Requires:	python-nose
 Requires:	python-paramiko >= 1.7.6
-Requires:	python-pygments >= 1.4
+Requires:	python-pygments >= 1.5
 Requires:	python-pysvn
 Requires:	python-pytz
 Requires:	python-recaptcha
 Requires:	python-slimit
-Obsoletes:	ReviewBoard < 1.7.0
+# Pull one of webserver modes
+Suggests:	apache-mod_python
+Suggests:	apache-mod_wsgi
 # Pull in the client libraries for all of the supported databases
-Requires:	MySQL-python
+Requires:	python-MySQLdb
 Requires:	python-psycopg2
 Requires:	python-sqlite
 # Pull in the tools for working with common repositories
 Requires:	git-core
 Requires:	mercurial
 Requires:	subversion
+Obsoletes:	ReviewBoard < 1.7.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
