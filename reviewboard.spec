@@ -56,6 +56,7 @@ Requires:	python-sqlite
 Requires:	git-core
 Requires:	mercurial
 Requires:	subversion
+Suggests:	python-rbtools
 Obsoletes:	ReviewBoard < 1.7.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
