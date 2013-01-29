@@ -2,15 +2,18 @@
 # - webservers integration
 # - system js packages, jquery, jquery-ui, etc
 # - do we need to package .less and not minified .js? nose.cfg?
+# - handle upgrades on version change:
+#   $ rb-site upgrade /path/to/rb/install
 Summary:	Web-based code review tool
 Name:		reviewboard
 Version:	1.7.3
-Release:	0.10
+Release:	0.12
 License:	MIT
 Group:		Applications/Networking
 URL:		http://www.review-board.org/
 Source0:	http://downloads.reviewboard.org/releases/ReviewBoard/1.7/ReviewBoard-%{version}.tar.gz
 # Source0-md5:	a1e7201c57aad5c8057df4e8d97e220d
+Source1:	apache.conf
 Patch0:		default-cache-file-path.patch
 BuildRequires:	python-django >= 1.4.3
 BuildRequires:	python-django-evolution >= 0.6.7
@@ -57,6 +60,11 @@ Obsoletes:	ReviewBoard < 1.7.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_webapps	/etc/webapps
+%define		_webapp		%{name}
+%define		_sysconfdir	%{_webapps}/%{_webapp}
+%define		_appdir		%{_datadir}/%{_webapp}
+
 %description
 Review Board is a powerful web-based code review tool that offers
 developers an easy way to handle code reviews. It scales well from
@@ -83,6 +91,21 @@ install -d $RPM_BUILD_ROOT/var/cache/%{name}/cache
 	--optimize=2 \
 	--root $RPM_BUILD_ROOT
 
+install -d $RPM_BUILD_ROOT%{_sysconfdir}
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+cp -p $RPM_BUILD_ROOT%{_sysconfdir}/{apache,httpd}.conf
+
+# create htdocs structure that rb-site install would create
+# TODO: maybe move rb htdocs instead of symlinking here?
+D=$RPM_BUILD_ROOT%{_appdir}/htdocs
+install -d $D/{media/{ext,uploaded/images},static}
+ln -s %{py_sitescriptdir}/%{name}/htdocs/errordocs $D
+S=$D/static
+ln -s %{py_sitescriptdir}/%{name}/htdocs/static/admin $S/admin
+ln -s %{py_sitescriptdir}/djblets/static $S/djblets
+ln -s %{py_sitescriptdir}/%{name}/htdocs/static/lib $S/lib
+ln -s %{py_sitescriptdir}/%{name}/htdocs/static/rb $S/rb
+
 # The rb-site executable has a PyGTK GUI, so would normally
 # require us to ship a .desktop file. However it can only be run when supplied
 # a directory as a command-line argument, hence it wouldn't be meaningful to
@@ -95,23 +118,39 @@ install -d $RPM_BUILD_ROOT/var/cache/%{name}/cache
 install -p reviewboard/manage.py $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/manage.py
 
 # Remove test data from the installed packages
-rm -rf $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/diffviewer/testdata \
+#%{__rm} $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/nose.cfg
+%{__rm} -r $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/diffviewer/testdata \
        $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/scmtools/testdata \
        $RPM_BUILD_ROOT%{py_sitescriptdir}/webtests
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%triggerin -- apache1 < 1.3.37-3, apache1-base
+%webapp_register apache %{_webapp}
+
+%triggerun -- apache1 < 1.3.37-3, apache1-base
+%webapp_unregister apache %{_webapp}
+
+%triggerin -- apache < 2.2.0, apache-base
+%webapp_register httpd %{_webapp}
+
+%triggerun -- apache < 2.2.0, apache-base
+%webapp_unregister httpd %{_webapp}
+
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING INSTALL NEWS README
+%dir %attr(750,root,http) %{_sysconfdir}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
 %attr(755,root,root) %{_bindir}/rb-site
 %attr(755,root,root) %{_bindir}/rbssh
 %dir %attr(770,root,http) /var/cache/%{name}
 %dir %attr(770,root,http) /var/cache/%{name}/cache
-%dir %{py_sitescriptdir}/reviewboard
-%{py_sitescriptdir}/%{name}/nose.cfg
+%dir %{py_sitescriptdir}/%{name}
 %{py_sitescriptdir}/%{name}/*.py[co]
+%{py_sitescriptdir}/%{name}/nose.cfg
 %attr(755,root,root) %{py_sitescriptdir}/%{name}/manage.py
 
 %{py_sitescriptdir}/%{name}/accounts
@@ -130,6 +169,14 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitescriptdir}/%{name}/ssh
 %{py_sitescriptdir}/%{name}/templates
 %{py_sitescriptdir}/%{name}/webapi
+%{py_sitescriptdir}/ReviewBoard-%{version}-*.egg-info
+
+%dir %{_appdir}
+%dir %{_appdir}/htdocs
+%{_appdir}/htdocs/static
+%{_appdir}/htdocs/errordocs
+# FIXME: media remap to /var
+%{_appdir}/htdocs/media
 
 %dir %{py_sitescriptdir}/%{name}/static
 %dir %{py_sitescriptdir}/%{name}/static/lib
@@ -165,7 +212,3 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitescriptdir}/%{name}/static/rb/js/models
 %{py_sitescriptdir}/%{name}/static/rb/js/utils
 %{py_sitescriptdir}/%{name}/static/rb/js/views
-
-%if "%{py_ver}" > "2.4"
-%{py_sitescriptdir}/ReviewBoard-%{version}-*.egg-info
-%endif
