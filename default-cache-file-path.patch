@@ -18,7 +18,7 @@ index 3807b6f69a7bad307bd07216175e677a85042759..33b43308ffd30753fd422e226720218f
  # installations can get away with a file-based or local memory cache.
  #
 -# CACHE_BACKEND = 'file:///tmp/reviewboard_cache?max_entries=5000'
-+# CACHE_BACKEND = 'file:///var/cache/reviewboard/cache?max_entries=5000'
++# CACHE_BACKEND = 'file:///var/cache/reviewboard?max_entries=5000'
  # CACHE_BACKEND = 'memcached://localhost:11211//'
  CACHE_BACKEND = 'locmem:///'
  
@@ -31,7 +31,7 @@ index c30982a6479248ae1f6f0c366ba2cf332224cedf..32c6c6bbe28eb29b77ae4c1144379a86
  
          ui.prompt_input(page, "Cache Directory",
 -                        site.cache_info or "/tmp/reviewboard_cache",
-+                        site.cache_info or "/var/cache/reviewboard/cache",
++                        site.cache_info or "/var/cache/reviewboard",
                          save_obj=site, save_var="cache_info")
  
      def ask_web_server_type(self):
