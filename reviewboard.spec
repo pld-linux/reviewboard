@@ -4,13 +4,13 @@
 # - do we need to package .less and not minified .js? nose.cfg?
 Summary:	Web-based code review tool
 Name:		reviewboard
-Version:	1.7.2
-Release:	1
+Version:	1.7.3
+Release:	0.10
 License:	MIT
 Group:		Applications/Networking
 URL:		http://www.review-board.org/
 Source0:	http://downloads.reviewboard.org/releases/ReviewBoard/1.7/ReviewBoard-%{version}.tar.gz
-# Source0-md5:	f5ead87918a472945384263516dbb06e
+# Source0-md5:	a1e7201c57aad5c8057df4e8d97e220d
 Patch0:		default-cache-file-path.patch
 BuildRequires:	python-django >= 1.4.3
 BuildRequires:	python-django-evolution >= 0.6.7
@@ -77,21 +77,26 @@ take much of the stress and time out of the code review process.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/var/cache/reviewboard/cache
+install -d $RPM_BUILD_ROOT/var/cache/%{name}/cache
 %{__python} setup.py install \
 	--skip-build \
 	--optimize=2 \
 	--root $RPM_BUILD_ROOT
 
+# The rb-site executable has a PyGTK GUI, so would normally
+# require us to ship a .desktop file. However it can only be run when supplied
+# a directory as a command-line argument, hence it wouldn't be meaningful to
+# create a .desktop file for it.
+
 %py_postclean
 
 # scripts that have a shebang and are meaningful to run; make executable:
 # need to reinstall as py_postclean has removed .py
-install -p reviewboard/manage.py $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/manage.py
+install -p reviewboard/manage.py $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/manage.py
 
 # Remove test data from the installed packages
-rm -rf $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/diffviewer/testdata \
-       $RPM_BUILD_ROOT%{py_sitescriptdir}/reviewboard/scmtools/testdata \
+rm -rf $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/diffviewer/testdata \
+       $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/scmtools/testdata \
        $RPM_BUILD_ROOT%{py_sitescriptdir}/webtests
 
 %clean
@@ -99,71 +104,67 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-# The rb-site executable has a PyGTK GUI, so would normally
-# require us to ship a .desktop file.  However it can only be run when supplied
-# a directory as a command-line argument, hence it wouldn't be meaningful to
-# create a .desktop file for it.
 %doc AUTHORS COPYING INSTALL NEWS README
 %attr(755,root,root) %{_bindir}/rb-site
 %attr(755,root,root) %{_bindir}/rbssh
-%dir %attr(770,root,http) /var/cache/reviewboard
-%dir %attr(770,root,http) /var/cache/reviewboard/cache
+%dir %attr(770,root,http) /var/cache/%{name}
+%dir %attr(770,root,http) /var/cache/%{name}/cache
 %dir %{py_sitescriptdir}/reviewboard
-%{py_sitescriptdir}/reviewboard/nose.cfg
-%{py_sitescriptdir}/reviewboard/*.py[co]
-%attr(755,root,root) %{py_sitescriptdir}/reviewboard/manage.py
+%{py_sitescriptdir}/%{name}/nose.cfg
+%{py_sitescriptdir}/%{name}/*.py[co]
+%attr(755,root,root) %{py_sitescriptdir}/%{name}/manage.py
 
-%{py_sitescriptdir}/reviewboard/accounts
-%{py_sitescriptdir}/reviewboard/admin
-%{py_sitescriptdir}/reviewboard/attachments
-%{py_sitescriptdir}/reviewboard/changedescs
-%{py_sitescriptdir}/reviewboard/cmdline
-%{py_sitescriptdir}/reviewboard/diffviewer
-%{py_sitescriptdir}/reviewboard/extensions
-%{py_sitescriptdir}/reviewboard/hostingsvcs
-%{py_sitescriptdir}/reviewboard/htdocs
-%{py_sitescriptdir}/reviewboard/notifications
-%{py_sitescriptdir}/reviewboard/reviews
-%{py_sitescriptdir}/reviewboard/scmtools
-%{py_sitescriptdir}/reviewboard/site
-%{py_sitescriptdir}/reviewboard/ssh
-%{py_sitescriptdir}/reviewboard/templates
-%{py_sitescriptdir}/reviewboard/webapi
+%{py_sitescriptdir}/%{name}/accounts
+%{py_sitescriptdir}/%{name}/admin
+%{py_sitescriptdir}/%{name}/attachments
+%{py_sitescriptdir}/%{name}/changedescs
+%{py_sitescriptdir}/%{name}/cmdline
+%{py_sitescriptdir}/%{name}/diffviewer
+%{py_sitescriptdir}/%{name}/extensions
+%{py_sitescriptdir}/%{name}/hostingsvcs
+%{py_sitescriptdir}/%{name}/htdocs
+%{py_sitescriptdir}/%{name}/notifications
+%{py_sitescriptdir}/%{name}/reviews
+%{py_sitescriptdir}/%{name}/scmtools
+%{py_sitescriptdir}/%{name}/site
+%{py_sitescriptdir}/%{name}/ssh
+%{py_sitescriptdir}/%{name}/templates
+%{py_sitescriptdir}/%{name}/webapi
 
-%dir %{py_sitescriptdir}/reviewboard/static
-%dir %{py_sitescriptdir}/reviewboard/static/lib
-%dir %{py_sitescriptdir}/reviewboard/static/lib/js
-%{py_sitescriptdir}/reviewboard/static/lib/js/backbone-0.9.2.min.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/csshover2.htc
-%dir %{py_sitescriptdir}/reviewboard/static/lib/js/flot
-%{py_sitescriptdir}/reviewboard/static/lib/js/flot/excanvas.min.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/flot/jquery.flot.min.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/flot/jquery.flot.pie.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/flot/jquery.flot.pie.min.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/flot/jquery.flot.selection.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/flot/jquery.flot.selection.min.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/jasmine-1.3.1.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/jasmine-html-1.3.1.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/jquery-1.8.2.min.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/jquery-ui-1.8.24.custom.min.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/jquery.form.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/jquery.masonry.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/jquery.timesince.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/less-1.3.1.min.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/pngfix.htc
-%{py_sitescriptdir}/reviewboard/static/lib/js/ui.autocomplete.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/ui.autocomplete.min.js
-%{py_sitescriptdir}/reviewboard/static/lib/js/underscore-1.3.3.min.js
-%dir %{py_sitescriptdir}/reviewboard/static/rb
-%dir %{py_sitescriptdir}/reviewboard/static/rb/css
-%{py_sitescriptdir}/reviewboard/static/rb/css/*.css
-%{py_sitescriptdir}/reviewboard/static/rb/css/*.less
-%{py_sitescriptdir}/reviewboard/static/rb/images
-%dir %{py_sitescriptdir}/reviewboard/static/rb/js
-%{py_sitescriptdir}/reviewboard/static/rb/js/*.js
-%{py_sitescriptdir}/reviewboard/static/rb/js/models
-%{py_sitescriptdir}/reviewboard/static/rb/js/utils
-%{py_sitescriptdir}/reviewboard/static/rb/js/views
+%dir %{py_sitescriptdir}/%{name}/static
+%dir %{py_sitescriptdir}/%{name}/static/lib
+%dir %{py_sitescriptdir}/%{name}/static/lib/js
+%{py_sitescriptdir}/%{name}/static/lib/js/backbone-0.9.2.min.js
+%{py_sitescriptdir}/%{name}/static/lib/js/csshover2.htc
+%dir %{py_sitescriptdir}/%{name}/static/lib/js/flot
+%{py_sitescriptdir}/%{name}/static/lib/js/flot/excanvas.min.js
+%{py_sitescriptdir}/%{name}/static/lib/js/flot/jquery.flot.min.js
+%{py_sitescriptdir}/%{name}/static/lib/js/flot/jquery.flot.pie.js
+%{py_sitescriptdir}/%{name}/static/lib/js/flot/jquery.flot.pie.min.js
+%{py_sitescriptdir}/%{name}/static/lib/js/flot/jquery.flot.selection.js
+%{py_sitescriptdir}/%{name}/static/lib/js/flot/jquery.flot.selection.min.js
+%{py_sitescriptdir}/%{name}/static/lib/js/jasmine-1.3.1.js
+%{py_sitescriptdir}/%{name}/static/lib/js/jasmine-html-1.3.1.js
+%{py_sitescriptdir}/%{name}/static/lib/js/jquery-1.8.2.min.js
+%{py_sitescriptdir}/%{name}/static/lib/js/jquery-ui-1.8.24.custom.min.js
+%{py_sitescriptdir}/%{name}/static/lib/js/jquery.form.js
+%{py_sitescriptdir}/%{name}/static/lib/js/jquery.masonry.js
+%{py_sitescriptdir}/%{name}/static/lib/js/jquery.timesince.js
+%{py_sitescriptdir}/%{name}/static/lib/js/less-1.3.1.min.js
+%{py_sitescriptdir}/%{name}/static/lib/js/pngfix.htc
+%{py_sitescriptdir}/%{name}/static/lib/js/ui.autocomplete.js
+%{py_sitescriptdir}/%{name}/static/lib/js/ui.autocomplete.min.js
+%{py_sitescriptdir}/%{name}/static/lib/js/underscore-1.3.3.min.js
+%dir %{py_sitescriptdir}/%{name}/static/rb
+%dir %{py_sitescriptdir}/%{name}/static/rb/css
+%{py_sitescriptdir}/%{name}/static/rb/css/*.css
+%{py_sitescriptdir}/%{name}/static/rb/css/*.less
+%{py_sitescriptdir}/%{name}/static/rb/images
+%dir %{py_sitescriptdir}/%{name}/static/rb/js
+%{py_sitescriptdir}/%{name}/static/rb/js/*.js
+%{py_sitescriptdir}/%{name}/static/rb/js/models
+%{py_sitescriptdir}/%{name}/static/rb/js/utils
+%{py_sitescriptdir}/%{name}/static/rb/js/views
 
 %if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/ReviewBoard-%{version}-*.egg-info
