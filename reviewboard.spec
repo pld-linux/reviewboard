@@ -7,7 +7,7 @@
 Summary:	Web-based code review tool
 Name:		reviewboard
 Version:	1.7.3
-Release:	0.12
+Release:	0.13
 License:	MIT
 Group:		Applications/Networking
 URL:		http://www.review-board.org/
@@ -15,6 +15,7 @@ Source0:	http://downloads.reviewboard.org/releases/ReviewBoard/1.7/ReviewBoard-%
 # Source0-md5:	a1e7201c57aad5c8057df4e8d97e220d
 Source1:	apache.conf
 Patch0:		default-cache-file-path.patch
+BuildRequires:	fslint
 BuildRequires:	python-django >= 1.4.3
 BuildRequires:	python-django-evolution >= 0.6.7
 BuildRequires:	python-djblets >= 0.7.8
@@ -113,6 +114,9 @@ ln -s %{py_sitescriptdir}/%{name}/htdocs/static/rb $S/rb
 # create a .desktop file for it.
 
 %py_postclean
+
+# hardlink files with fingerprinted variants
+findup -m $RPM_BUILD_ROOT
 
 # scripts that have a shebang and are meaningful to run; make executable:
 # need to reinstall as py_postclean has removed .py
