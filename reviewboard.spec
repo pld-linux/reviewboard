@@ -57,6 +57,8 @@ Requires:	python-sqlite
 Requires:	git-core
 Requires:	mercurial
 Requires:	subversion
+# optional things
+Suggests:	python-ldap
 Suggests:	python-rbtools
 Obsoletes:	ReviewBoard < 1.7.0
 BuildArch:	noarch
