@@ -6,13 +6,13 @@
 #   $ rb-site upgrade /path/to/rb/install
 Summary:	Web-based code review tool
 Name:		reviewboard
-Version:	1.7.3
+Version:	1.7.4
 Release:	0.13
 License:	MIT
 Group:		Applications/Networking
 URL:		http://www.review-board.org/
 Source0:	http://downloads.reviewboard.org/releases/ReviewBoard/1.7/ReviewBoard-%{version}.tar.gz
-# Source0-md5:	a1e7201c57aad5c8057df4e8d97e220d
+# Source0-md5:	6576730e935964a9780feffa52114460
 Source1:	apache.conf
 Patch0:		default-cache-file-path.patch
 BuildRequires:	fslint
