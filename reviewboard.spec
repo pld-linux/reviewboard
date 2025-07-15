@@ -77,7 +77,7 @@ take much of the stress and time out of the code review process.
 
 %prep
 %setup -q -n ReviewBoard-%{version}
-%patch0 -p1
+%patch -P0 -p1
 
 %{__sed} -i -e '1s,^#!.*python,#!%{__python},' reviewboard/manage.py
 
